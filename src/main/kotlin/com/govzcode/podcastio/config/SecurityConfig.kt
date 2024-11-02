@@ -33,25 +33,17 @@ class SecurityConfiguration(
     @Bean
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http.csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() } // Своего рода отключение CORS (разрешение запросов со всех доменов)
-            .cors { cors: CorsConfigurer<HttpSecurity?> ->
+        http.csrf { csrf -> csrf.disable() }
+            .cors { cors ->
                 cors.configurationSource {
                     val corsConfiguration = CorsConfiguration()
                     corsConfiguration.setAllowedOriginPatterns(listOf("*"))
-                    corsConfiguration.setAllowedMethods(
-                        listOf(
-                            "GET",
-                            "POST",
-                            "PUT",
-                            "DELETE",
-                            "OPTIONS"
-                        )
-                    )
+                    corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     corsConfiguration.allowedHeaders = listOf("*")
                     corsConfiguration.allowCredentials = true
                     corsConfiguration
                 }
-            } // Настройка доступа к конечным точкам
+            }
             .authorizeHttpRequests { request ->
                 request
                     .requestMatchers("/auth/**").permitAll()
