@@ -47,7 +47,7 @@ class SecurityConfiguration(
             .authorizeHttpRequests { request ->
                 request
                     .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
+                    .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**", "/error/**").permitAll()
                     .requestMatchers("/endpoint", "/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
@@ -58,6 +58,7 @@ class SecurityConfiguration(
             }
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+
         return http.build()
     }
 
